@@ -130,6 +130,6 @@ habitflow/
 ---
 
 ## 👤 Author
-
+**Sathya R V**
 Developed with ❤️ as a **frontend productivity project**  
 Feel free to fork, modify, and improve!
