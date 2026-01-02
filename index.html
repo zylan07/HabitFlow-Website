@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HabitFlow - Simple Daily Habit Tracker</title>
+  <link rel="stylesheet" href="style_simple.css">
+  <link rel="icon" type="image/png" href="imgs/favicon.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4361ee">
+</head>
+<body>
+  <header class="header">
+    <img src="imgs/logo.png" alt="HabitFlow" class="header-logo">
+    <div class="header-buttons">
+      <button id="addHabitBtn" class="btn">+ Add Habit</button>
+      <button id="themeToggle" class="btn" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <img src="imgs/hero.png" alt="HabitFlow Hero" class="hero-img">
+    <section class="stats">
+      <div class="stat">
+        <span id="streakStat">0</span>
+        <span>Day Streak</span>
+      </div>
+      <div class="stat">
+        <span id="xpStat">0</span>
+        <span>XP</span>
+      </div>
+      <div class="stat">
+        <span id="levelStat">1</span>
+        <span>Level</span>
+      </div>
+      <div class="stat">
+        <span id="completionStat">0%</span>
+        <span>Today</span>
+      </div>
+    </section>
+
+    <section class="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="health">Health</button>
+      <button class="filter-btn" data-filter="work">Work</button>
+      <button class="filter-btn" data-filter="learning">Learning</button>
+      <button class="filter-btn" data-filter="mindfulness">Mind</button>
+    </section>
+
+    <section class="utilities">
+      <button id="exportBtn" class="btn">Export JSON</button>
+      <button id="importBtn" class="btn">Import JSON</button>
+      <input id="importFile" type="file" accept="application/json" hidden>
+      <button id="downloadReportBtn" class="btn primary">Download Report (PDF)</button>
+      <button id="resetTodayBtn" class="btn danger">Reset Today</button>
+    </section>
+
+    <section id="habitsContainer" class="habits"></section>
+    <div id="emptyState" class="empty-state">No habits for today. Add one!</div>
+
+    <section class="progress-section">
+      <h2>Today's Progress</h2>
+      <div class="progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+      <p id="progressText">0% Complete</p>
+    </section>
+
+    <section class="timer-section">
+      <h2>Focus Timer</h2>
+      <div class="timer-display" id="timerDisplay">25:00</div>
+      <div class="timer-controls">
+        <button id="startTimer" class="btn">Start</button>
+        <button id="resetTimer" class="btn">Reset</button>
+      </div>
+    </section>
+
+    <section class="achievements-section">
+      <h2>Trophies</h2>
+      <div id="achievementsGrid" class="achievements-grid"></div>
+    </section>
+
+    <section class="video-section">
+      <h2>Why Habits Matter</h2>
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/0Tfa6_1i2vE"
+          title="The Power of Habits"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="#home" class="nav-item active" data-section="home">🏠 Home</a>
+    <a href="#trophies" class="nav-item" data-section="trophies">🏆 Trophies</a>
+    <a href="#settings" class="nav-item" data-section="settings">📋 Tasks</a>
+  </nav>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2026 HabitFlow. Built with <span class="footer-icon">🌱</span> for daily habits.</p>
+      <div class="footer-links">
+        <a href="#home" class="footer-link">Home</a>
+        <a href="#trophies" class="footer-link">Trophies</a>
+        <a href="#settings" class="footer-link">Tasks</a>
+      </div>
+    </div>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="Back to top">↑</button>
+
+  <div id="habitModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add New Habit</h2>
+        <button id="closeModal" class="btn">&times;</button>
+      </div>
+      <form id="habitForm">
+        <div class="form-group">
+          <label>Emoji</label>
+          <input type="text" id="habitEmoji" placeholder="🏃" maxlength="4" required>
+        </div>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" id="habitName" placeholder="Exercise" required>
+        </div>
+        <div class="form-group">
+          <label>Type</label>
+          <select id="habitType">
+            <option value="binary">Check-in</option>
+            <option value="count">Numeric</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="habitCategory">
+            <option value="health">Health</option>
+            <option value="work">Work</option>
+            <option value="learning">Learning</option>
+            <option value="mindfulness">Mindfulness</option>
+          </select>
+        </div>
+        <div class="form-group" id="goalGroup">
+          <label>Daily Goal</label>
+          <input type="number" id="habitGoal" min="1" value="1">
+        </div>
+        <div class="form-group">
+          <label>Days</label>
+          <div class="days-selector">
+            <label><input type="checkbox" name="days" value="0" checked> S</label>
+            <label><input type="checkbox" name="days" value="1" checked> M</label>
+            <label><input type="checkbox" name="days" value="2" checked> T</label>
+            <label><input type="checkbox" name="days" value="3" checked> W</label>
+            <label><input type="checkbox" name="days" value="4" checked> T</label>
+            <label><input type="checkbox" name="days" value="5" checked> F</label>
+            <label><input type="checkbox" name="days" value="6" checked> S</label>
+          </div>
+        </div>
+        <button type="submit" class="btn primary">Add Habit</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="celebrateModal" class="modal celebrate-modal" role="dialog" aria-modal="true" aria-labelledby="celebrateTitle">
+    <div class="modal-content celebrate-content">
+      <div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
+      <div class="celebrate-emoji" id="celebrateEmoji">🎉</div>
+      <h2 id="celebrateTitle">Nice!</h2>
+      <p id="celebrateMessage">Task completed.</p>
+      <p id="celebrateQuote" class="celebrate-quote"></p>
+      <button id="celebrateContinue" class="btn primary">Continue</button>
+    </div>
+  </div>
+
+  <script src="script_simple.js"></script>
+</body>
+</html>
